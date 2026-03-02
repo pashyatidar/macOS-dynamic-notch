@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		15E23BB22F545DBB00EFD0EE /* mediaControl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = mediaControl.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		15E23BB22F545DBB00EFD0EE /* MyNotch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyNotch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		15E23BB42F545DBB00EFD0EE /* mediaControl */ = {
+		15E23BB42F545DBB00EFD0EE /* MyNotch */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = mediaControl;
+			path = MyNotch;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -32,7 +32,7 @@
 		15E23BA92F545DBB00EFD0EE = {
 			isa = PBXGroup;
 			children = (
-				15E23BB42F545DBB00EFD0EE /* mediaControl */,
+				15E23BB42F545DBB00EFD0EE /* MyNotch */,
 				15E23BB32F545DBB00EFD0EE /* Products */,
 			);
 			sourceTree = "<group>";
@@ -40,7 +40,7 @@
 		15E23BB32F545DBB00EFD0EE /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				15E23BB22F545DBB00EFD0EE /* mediaControl.app */,
+				15E23BB22F545DBB00EFD0EE /* MyNotch.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,9 +48,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		15E23BB12F545DBB00EFD0EE /* mediaControl */ = {
+		15E23BB12F545DBB00EFD0EE /* MyNotch */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 15E23BC02F545DBF00EFD0EE /* Build configuration list for PBXNativeTarget "mediaControl" */;
+			buildConfigurationList = 15E23BC02F545DBF00EFD0EE /* Build configuration list for PBXNativeTarget "MyNotch" */;
 			buildPhases = (
 				15E23BAE2F545DBB00EFD0EE /* Sources */,
 				15E23BAF2F545DBB00EFD0EE /* Frameworks */,
@@ -61,13 +61,13 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				15E23BB42F545DBB00EFD0EE /* mediaControl */,
+				15E23BB42F545DBB00EFD0EE /* MyNotch */,
 			);
-			name = mediaControl;
+			name = MyNotch;
 			packageProductDependencies = (
 			);
 			productName = mediaControl;
-			productReference = 15E23BB22F545DBB00EFD0EE /* mediaControl.app */;
+			productReference = 15E23BB22F545DBB00EFD0EE /* MyNotch.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -85,7 +85,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 15E23BAD2F545DBB00EFD0EE /* Build configuration list for PBXProject "mediaControl" */;
+			buildConfigurationList = 15E23BAD2F545DBB00EFD0EE /* Build configuration list for PBXProject "MyNotch" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -99,7 +99,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				15E23BB12F545DBB00EFD0EE /* mediaControl */,
+				15E23BB12F545DBB00EFD0EE /* MyNotch */,
 			);
 		};
 /* End PBXProject section */
@@ -251,9 +251,9 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				ENABLE_APP_SANDBOX = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
+				ENABLE_APP_SANDBOX = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSAppleEventsUsageDescription = "We need this to control Spotify playback.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
@@ -282,9 +282,9 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				ENABLE_APP_SANDBOX = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
+				ENABLE_APP_SANDBOX = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSAppleEventsUsageDescription = "We need this to control Spotify playback.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
@@ -308,7 +308,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		15E23BAD2F545DBB00EFD0EE /* Build configuration list for PBXProject "mediaControl" */ = {
+		15E23BAD2F545DBB00EFD0EE /* Build configuration list for PBXProject "MyNotch" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				15E23BBE2F545DBF00EFD0EE /* Debug */,
@@ -317,7 +317,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		15E23BC02F545DBF00EFD0EE /* Build configuration list for PBXNativeTarget "mediaControl" */ = {
+		15E23BC02F545DBF00EFD0EE /* Build configuration list for PBXNativeTarget "MyNotch" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				15E23BC12F545DBF00EFD0EE /* Debug */,
