@@ -2,117 +2,142 @@ import SwiftUI
 import Combine
 
 struct ContentView: View {
-    @State private var isHovering = false
+    @State private var isExpanded = false
     
     // Live Spotify Data States
     @State private var trackName = "Not Playing"
     @State private var artistName = "---"
     @State private var artworkURL = ""
     
-    // A live engine that updates the UI every 1 second while expanded
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var body: some View {
-        VStack(spacing: 0) {
-            ZStack(alignment: .top) {
-                // THE GHOST BACKGROUND: Invisible (0.001) when collapsed, Black when expanded!
-                BottomRoundedCornerShape(radius: 16)
-                    .fill(Color.black.opacity(isHovering ? 1.0 : 0.001))
-                    .frame(width: isHovering ? 320 : 90, height: isHovering ? 150 : 15)
-                    .shadow(color: .black.opacity(isHovering ? 0.4 : 0), radius: 10, x: 0, y: 5)
-                
-                if isHovering {
-                    VStack(spacing: 16) {
-                        // SPOTIFY INFO ROW
-                        HStack(spacing: 15) {
-                            // The Live Album Art
-                            if let url = URL(string: artworkURL), !artworkURL.isEmpty {
-                                AsyncImage(url: url) { image in
-                                    image.resizable().aspectRatio(contentMode: .fill)
-                                } placeholder: {
-                                    Color.gray.opacity(0.3) // Shows while loading
-                                }
+        // 🚨 THE CANVAS: Force the ZStack to be exactly 350x200
+        ZStack(alignment: .top) {
+            
+            // 1. THE VISUALS (Smoothly animates)
+            BottomRoundedCornerShape(radius: 16)
+                .fill(Color.black.opacity(isExpanded ? 1.0 : 0.001))
+                .frame(width: isExpanded ? 320 : 90, height: isExpanded ? 150 : 15)
+                .shadow(color: .black.opacity(isExpanded ? 0.4 : 0), radius: 10, x: 0, y: 5)
+                // The visual shape is a ghost. It CANNOT catch your mouse.
+                .allowsHitTesting(false)
+            
+            // 2. THE UI ELEMENTS
+            if isExpanded {
+                VStack(spacing: 16) {
+                    // SPOTIFY INFO ROW
+                    HStack(spacing: 15) {
+                        if let url = URL(string: artworkURL), !artworkURL.isEmpty {
+                            AsyncImage(url: url) { image in
+                                image.resizable().aspectRatio(contentMode: .fill)
+                            } placeholder: {
+                                Color.gray.opacity(0.3)
+                            }
+                            .frame(width: 50, height: 50)
+                            .cornerRadius(8)
+                            .shadow(radius: 3)
+                        } else {
+                            Rectangle()
+                                .fill(Color.gray.opacity(0.3))
                                 .frame(width: 50, height: 50)
                                 .cornerRadius(8)
-                                .shadow(radius: 3)
-                            } else {
-                                // Fallback if Spotify is closed
-                                Rectangle()
-                                    .fill(Color.gray.opacity(0.3))
-                                    .frame(width: 50, height: 50)
-                                    .cornerRadius(8)
-                                    .overlay(Text("🎵").font(.title3))
-                            }
-                            
-                            // Track & Artist Text
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(trackName)
-                                    .font(.system(size: 15, weight: .bold))
-                                    .foregroundColor(.white)
-                                    .lineLimit(1) // Prevents super long titles from breaking the UI
-                                Text(artistName)
-                                    .font(.system(size: 13, weight: .regular))
-                                    .foregroundColor(.gray)
-                                    .lineLimit(1)
-                            }
-                            Spacer() // Pushes everything to the left
+                                .overlay(Text("🎵").font(.title3))
                         }
-                        .padding(.horizontal, 25)
-                        .padding(.top, 20)
                         
-                        // MEDIA CONTROLS
-                        // PREMIUM MEDIA CONTROLS
-                                                HStack(spacing: 30) {
-                                                    // Previous Track
-                                                    Button(action: { runAppleScript("if application \"Spotify\" is running then tell application \"Spotify\" to previous track") }) {
-                                                        Image(systemName: "backward.fill")
-                                                            .font(.system(size: 18))
-                                                            .foregroundColor(.white)
-                                                            .frame(width: 36, height: 36)
-                                                            .background(Color.white.opacity(0.1)) // Subtle grey circle
-                                                            .clipShape(Circle())
-                                                    }
-                                                    .buttonStyle(.plain)
-                                                    
-                                                    // Play/Pause
-                                                    Button(action: { runAppleScript("if application \"Spotify\" is running then tell application \"Spotify\" to playpause") }) {
-                                                        Image(systemName: "playpause.fill")
-                                                            .font(.system(size: 22)) // Slightly larger for emphasis
-                                                            .foregroundColor(.black)
-                                                            .frame(width: 44, height: 44)
-                                                            .background(Color.white) // High contrast play button
-                                                            .clipShape(Circle())
-                                                    }
-                                                    .buttonStyle(.plain)
-                                                    
-                                                    // Next Track
-                                                    Button(action: { runAppleScript("if application \"Spotify\" is running then tell application \"Spotify\" to next track") }) {
-                                                        Image(systemName: "forward.fill")
-                                                            .font(.system(size: 18))
-                                                            .foregroundColor(.white)
-                                                            .frame(width: 36, height: 36)
-                                                            .background(Color.white.opacity(0.1))
-                                                            .clipShape(Circle())
-                                                    }
-                                                    .buttonStyle(.plain)
-                                                }
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(trackName)
+                                .font(.system(size: 15, weight: .bold))
+                                .foregroundColor(.white)
+                                .lineLimit(1)
+                            Text(artistName)
+                                .font(.system(size: 13, weight: .regular))
+                                .foregroundColor(.gray)
+                                .lineLimit(1)
+                        }
+                        Spacer()
+                    }
+                    .padding(.horizontal, 25)
+                    .padding(.top, 20)
+                    
+                    // PREMIUM MEDIA CONTROLS
+                    HStack(spacing: 30) {
+                        Button(action: { runAppleScript("if application \"Spotify\" is running then tell application \"Spotify\" to previous track") }) {
+                            Image(systemName: "backward.fill")
+                                .font(.system(size: 18))
+                                .foregroundColor(.white)
+                                .frame(width: 36, height: 36)
+                                .background(Color.white.opacity(0.1))
+                                .clipShape(Circle())
+                        }
+                        .buttonStyle(.plain)
+                        
+                        Button(action: { runAppleScript("if application \"Spotify\" is running then tell application \"Spotify\" to playpause") }) {
+                            Image(systemName: "playpause.fill")
+                                .font(.system(size: 22))
+                                .foregroundColor(.black)
+                                .frame(width: 44, height: 44)
+                                .background(Color.white)
+                                .clipShape(Circle())
+                        }
+                        .buttonStyle(.plain)
+                        
+                        Button(action: { runAppleScript("if application \"Spotify\" is running then tell application \"Spotify\" to next track") }) {
+                            Image(systemName: "forward.fill")
+                                .font(.system(size: 18))
+                                .foregroundColor(.white)
+                                .frame(width: 36, height: 36)
+                                .background(Color.white.opacity(0.1))
+                                .clipShape(Circle())
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .transition(.opacity)
+            }
+        }
+        .frame(width: 350, height: 200, alignment: .top)
+        .contentShape(Rectangle()) // Makes the ENTIRE invisible 350x200 canvas active
+        
+        // 🚨 MATHEMATICAL HIT-TESTING 🚨
+        // This tracks the exact X/Y pixel of your mouse, bypassing macOS View bugs entirely!
+        .onContinuousHover { phase in
+            switch phase {
+            case .active(let location):
+                // Canvas width is 350. Center is 175.
+                // Small Notch bounds (90x15): X from 130 to 220, Y from 0 to 15
+                let inSmallArea = location.x >= 130 && location.x <= 220 && location.y >= 0 && location.y <= 15
+                
+                // Large Notch bounds (320x150): X from 15 to 335, Y from 0 to 150
+                let inLargeArea = location.x >= 15 && location.x <= 335 && location.y >= 0 && location.y <= 150
+                
+                if !isExpanded && inSmallArea {
+                    // Mouse mathematically hit the tiny 90x15 box. Open it!
+                    withAnimation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0)) {
+                        isExpanded = true
+                    }
+                    fetchSpotifyData()
+                } else if isExpanded && !inLargeArea {
+                    // Mouse mathematically completely left the 320x150 box. Close it!
+                    withAnimation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0)) {
+                        isExpanded = false
+                    }
+                }
+                // NOTE: If mouse is in Large Area but NOT Small Area while closed, nothing happens.
+                // This perfectly solves your glitch!
+                
+            case .ended:
+                // Mouse completely left the entire 350x200 canvas area
+                if isExpanded {
+                    withAnimation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0)) {
+                        isExpanded = false
                     }
                 }
             }
-            // THE TRIGGERS
-            .onHover { hovering in
-                withAnimation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0)) {
-                    isHovering = hovering
-                }
-                if hovering { fetchSpotifyData() } // Fetch instantly when hovered
-            }
-            .onReceive(timer) { _ in
-                if isHovering { fetchSpotifyData() } // Keep fetching while open
-            }
-            
-            Spacer()
         }
-        .frame(width: 350, height: 200) // Matches AppDelegate size
+        .onReceive(timer) { _ in
+            if isExpanded { fetchSpotifyData() }
+        }
         .edgesIgnoringSafeArea(.all)
     }
     
@@ -155,7 +180,7 @@ struct ContentView: View {
     }
 }
 
-// Our custom shape (stays exactly the same!)
+// Our custom shape
 struct BottomRoundedCornerShape: Shape {
     var radius: CGFloat
     func path(in rect: CGRect) -> Path {

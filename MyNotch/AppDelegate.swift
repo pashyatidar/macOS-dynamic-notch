@@ -7,15 +7,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         
-        do {
-            if SMAppService.mainApp.status == .notRegistered {
-                try SMAppService.mainApp.register()
-                print("Successfully registered to start at login!")
-            }
-        } catch {
-            print("Failed to register for login: \(error)")
-        }
-        
         // THIS IS THE MAGIC KEY: Hides the Dock icon and makes it a system overlay
         NSApp.setActivationPolicy(.accessory)
         
