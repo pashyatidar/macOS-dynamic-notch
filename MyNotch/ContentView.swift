@@ -24,10 +24,14 @@ struct ContentView: View {
         return 90 // Idle size
     }
     
+    // 🚨 PHYSICS: Content-aware height to cut out the dead space!
     var currentHeight: CGFloat {
-        if isExpanded { return showFullVault ? 350 : 185 } // Keep tall if open
-        if isTargeted { return 45 }
-        return 15
+        if isExpanded {
+            if showFullVault { return 350 } // Massive grid view
+            return stashedFiles.isEmpty ? 140 : 185 // 👈 Shrinks if no files are stashed!
+        }
+        if isTargeted { return 45 } // Catch mode
+        return 15 // Idle size
     }
     
     var body: some View {
@@ -151,27 +155,27 @@ struct ContentView: View {
                             
                             // Top Row: Vault Status & Toggle
                             // Top Row: Vault Status & Toggle (The WHOLE ROW is now clickable)
-                                                        Button(action: {
-                                                            withAnimation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0)) {
-                                                                showFullVault.toggle()
-                                                            }
-                                                        }) {
-                                                            HStack {
-                                                                Image(systemName: "archivebox.fill").foregroundColor(.blue)
-                                                                Text("\(stashedFiles.count) items stashed")
-                                                                    .font(.system(size: 12, weight: .bold))
-                                                                    .foregroundColor(.white)
-                                                                
-                                                                Spacer() // This empty space is now clickable too!
-                                                                
-                                                                Image(systemName: showFullVault ? "chevron.up.circle.fill" : "chevron.down.circle.fill")
-                                                                    .foregroundColor(.gray)
-                                                            }
-                                                            .padding(.horizontal, 25)
-                                                            .padding(.vertical, 5) // Adds a little breathing room for the click
-                                                            .contentShape(Rectangle()) // 🚨 MAGIC: Makes the empty Spacer() catch mouse clicks
-                                                        }
-                                                        .buttonStyle(.plain)
+                            Button(action: {
+                                withAnimation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0)) {
+                                    showFullVault.toggle()
+                                }
+                            }) {
+                                HStack {
+                                    Image(systemName: "archivebox.fill").foregroundColor(.blue)
+                                    Text("\(stashedFiles.count) items stashed")
+                                        .font(.system(size: 12, weight: .bold))
+                                        .foregroundColor(.white)
+                                    
+                                    Spacer() // This empty space is now clickable too!
+                                    
+                                    Image(systemName: showFullVault ? "chevron.up.circle.fill" : "chevron.down.circle.fill")
+                                        .foregroundColor(.gray)
+                                }
+                                .padding(.horizontal, 25)
+                                .padding(.vertical, 5) // Adds a little breathing room for the click
+                                .contentShape(Rectangle()) // 🚨 MAGIC: Makes the empty Spacer() catch mouse clicks
+                            }
+                            .buttonStyle(.plain)
                             
                             if showFullVault {
                                 ScrollView {
