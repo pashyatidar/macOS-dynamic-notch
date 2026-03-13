@@ -20,11 +20,12 @@ A native, floating "Dynamic Island" designed specifically for macOS. Built entir
 
 ## ✨ Features
 
-- **Zero-Footprint Idle State:** When collapsed, the notch maintains a `90x15` footprint at `0.001` opacity. It remains fully interactive without obstructing browser tabs or standard menu bar operations.
-- **Fluid UI Dynamics:** Utilizes native SwiftUI spring animations (`.spring(response: 0.4, dampingFraction: 0.6)`) for seamless expansion and retraction.
-- **Native SF Symbols:** Implements Apple's native vector graphics for crisp, retina-ready media controls.
-- **Real-Time Spotify Engine:** Uses the `Combine` framework to run a 1-second polling timer, leveraging an `NSAppleScript` bridge to bypass complex OAuth flows. It fetches live track data, artist information, and high-resolution album artwork directly from the local Spotify client.
-- **Global System Overlay:** Runs as a system accessory (`.accessory`), bypassing the standard Dock and floating above all full-screen applications and desktop spaces.
+* **Smart Drop Engine:** Effortlessly stash files, web links, and raw images. The app intelligently handles raw image data from Chrome and Safari, automatically converting them into temporary files for seamless stashing.
+* **Intelligent Drag-Out:** Dragging stashed items back out adapts to your needs. Files drag as actual files, while web links drag out as raw text (perfect for dropping directly into WhatsApp, Slack, or iMessage text fields).
+* **Frictionless Vault UI:** A beautiful, responsive grid system to hold your stashed items. Features iOS-style individual delete badges and a full-row click toggle for a satisfying user experience.
+* **Quick-Launch Integration:** Click any stashed icon to instantly open it in your default browser or native macOS application without removing it from the vault.
+* **Non-Intrusive Hitboxes:** The Notch dynamically scales its physics. It only blocks mouse clicks exactly where the visible UI is, ensuring your browser tabs and macOS menu bar remain completely accessible when the notch is idle.
+* **Live Spotify Controls:** Integrated premium media controls to play, pause, and skip tracks with live album artwork and track metadata.
 
 ## ⚙️ Prerequisites
 
