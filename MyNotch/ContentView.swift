@@ -36,7 +36,7 @@ struct ContentView: View {
             // 1. THE CATCHER'S MITT (Placed at the BACK so it doesn't block buttons)
             Rectangle()
                 .fill(Color.white.opacity(0.001))
-                .frame(width: isExpanded ? 320 : 150, height: isExpanded ? currentHeight : 45)
+                .frame(width: currentWidth, height: currentHeight)
                 .onDrop(of: [.item], isTargeted: $isTargeted) { providers in
                     for provider in providers {
                         
@@ -243,7 +243,6 @@ struct ContentView: View {
             }
         }
         .frame(width: 350, height: 400, alignment: .top)
-        .contentShape(Rectangle())
         // 🚨 HOVER PHYSICS: Dynamically reads the height so no "edge cliffs"
         .onContinuousHover { phase in
             guard !isTargeted else { return }
