@@ -2,11 +2,11 @@ import SwiftUI
 
 @main
 struct MyNotchApp: App {
-    // This connects our custom window logic
+    /// Connects the custom window logic to the application lifecycle.
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     var body: some Scene {
-        // We use Settings to prevent Xcode from opening a normal, boring window
+        /// Uses Settings to prevent the application from opening a standard window on launch.
         Settings {
             EmptyView()
         }

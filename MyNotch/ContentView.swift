@@ -5,46 +5,46 @@ import UniformTypeIdentifiers
 struct ContentView: View {
     @State private var isExpanded = false
     
-    // Live Spotify Data States
+    /// Live Spotify Data States
     @State private var trackName = "Not Playing"
     @State private var artistName = "---"
     @State private var artworkURL = ""
     
-    // MULTI-VAULT STATES
+    /// MULTI-VAULT STATES
     @State private var stashedFiles: [URL] = []
     @State private var showFullVault = false
     @State private var isTargeted = false
     
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
-    // 🚨 PHYSICS: isExpanded must be checked first to prevent the infinite flickering loop!
+    /// 🚨 PHYSICS: isExpanded must be checked first to prevent the infinite flickering loop!
     var currentWidth: CGFloat {
-        if isExpanded { return 320 } // Keep massive if open
-        if isTargeted { return 150 } // Pop out only if closed
-        return 90 // Idle size
+        if isExpanded { return 320 } /// Keep massive if open
+        if isTargeted { return 150 } /// Pop out only if closed
+        return 90 /// Idle size
     }
     
-    // 🚨 PHYSICS: Content-aware height to cut out the dead space!
+    /// 🚨 PHYSICS: Content-aware height to cut out the dead space!
     var currentHeight: CGFloat {
         if isExpanded {
-            if showFullVault { return 350 } // Massive grid view
-            return stashedFiles.isEmpty ? 140 : 185 // 👈 Shrinks if no files are stashed!
+            if showFullVault { return 350 } /// Massive grid view
+            return stashedFiles.isEmpty ? 140 : 185 /// 👈 Shrinks if no files are stashed!
         }
-        if isTargeted { return 45 } // Catch mode
-        return 15 // Idle size
+        if isTargeted { return 45 } /// Catch mode
+        return 15 /// Idle size
     }
     
     var body: some View {
         ZStack(alignment: .top) {
             
-            // 1. THE CATCHER'S MITT (Placed at the BACK so it doesn't block buttons)
+            /// 1. THE CATCHER'S MITT (Placed at the BACK so it doesn't block buttons)
             Rectangle()
                 .fill(Color.white.opacity(0.001))
                 .frame(width: currentWidth, height: currentHeight)
                 .onDrop(of: [.item], isTargeted: $isTargeted) { providers in
                     for provider in providers {
                         
-                        // 🟢 CATCH 1: DESKTOP FILES (PDFs, PPTXs, local images)
+                        /// 🟢 CATCH 1: DESKTOP FILES (PDFs, PPTXs, local images)
                         if provider.hasItemConformingToTypeIdentifier(UTType.fileURL.identifier) {
                             _ = provider.loadObject(ofClass: URL.self) { item, _ in
                                 DispatchQueue.main.async {
@@ -54,7 +54,7 @@ struct ContentView: View {
                                 }
                             }
                         }
-                        // 🟢 CATCH 2: RAW CHROME IMAGES (Forces macOS to build a temp file)
+                        /// 🟢 CATCH 2: RAW CHROME IMAGES (Forces macOS to build a temp file)
                         else if provider.hasItemConformingToTypeIdentifier(UTType.image.identifier) {
                             provider.loadFileRepresentation(forTypeIdentifier: UTType.image.identifier) { url, _ in
                                 if let tempURL = url {
@@ -65,7 +65,7 @@ struct ContentView: View {
                                 }
                             }
                         }
-                        // 🟢 CATCH 3: WEB LINKS (Chrome/Safari Links)
+                        /// 🟢 CATCH 3: WEB LINKS (Chrome/Safari Links)
                         else if provider.hasItemConformingToTypeIdentifier(UTType.url.identifier) {
                             _ = provider.loadObject(ofClass: URL.self) { item, _ in
                                 DispatchQueue.main.async {
@@ -75,7 +75,7 @@ struct ContentView: View {
                                 }
                             }
                         }
-                        // 🟢 CATCH 4: FALLBACK TEXT LINKS
+                        /// 🟢 CATCH 4: FALLBACK TEXT LINKS
                         else if provider.canLoadObject(ofClass: String.self) {
                             _ = provider.loadObject(ofClass: String.self) { item, _ in
                                 if let text = item as? String, let url = URL(string: text), url.scheme != nil {
@@ -87,7 +87,7 @@ struct ContentView: View {
                     return true
                 }
             
-            // 2. THE VISUAL SHAPE (Renders over the invisible drop zone)
+            /// 2. THE VISUAL SHAPE (Renders over the invisible drop zone)
             BottomRoundedCornerShape(radius: 16)
                 .fill(Color.black.opacity(isExpanded || isTargeted ? 1.0 : 0.001))
                 .frame(width: currentWidth, height: currentHeight)
@@ -100,12 +100,12 @@ struct ContentView: View {
                 .animation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0), value: isExpanded)
                 .allowsHitTesting(false)
             
-            // 3. THE UI ELEMENTS (Rendered on the very top, fully clickable)
+            /// 3. THE UI ELEMENTS (Rendered on the very top, fully clickable)
             if isExpanded {
-                // 🚨 STATE 1: Expanded Mode (Checked first so it doesn't vanish while dropping!)
+                /// 🚨 STATE 1: Expanded Mode (Checked first so it doesn't vanish while dropping!)
                 VStack(spacing: 12) {
                     
-                    // SPOTIFY INFO ROW
+                    /// SPOTIFY INFO ROW
                     HStack(spacing: 15) {
                         if let url = URL(string: artworkURL), !artworkURL.isEmpty {
                             AsyncImage(url: url) { image in
@@ -132,7 +132,7 @@ struct ContentView: View {
                     }
                     .padding(.horizontal, 25).padding(.top, 15)
                     
-                    // PREMIUM MEDIA CONTROLS
+                    /// PREMIUM MEDIA CONTROLS
                     HStack(spacing: 30) {
                         Button(action: { runAppleScript("if application \"Spotify\" is running then tell application \"Spotify\" to previous track") }) {
                             Image(systemName: "backward.fill").font(.system(size: 18)).foregroundColor(.white).frame(width: 36, height: 36).background(Color.white.opacity(0.1)).clipShape(Circle())
@@ -147,14 +147,14 @@ struct ContentView: View {
                         }.buttonStyle(.plain)
                     }
                     
-                    // MULTI-VAULT UI
+                    /// MULTI-VAULT UI
                     if !stashedFiles.isEmpty {
                         Divider().background(Color.gray.opacity(0.5)).padding(.horizontal, 25)
                         
                         VStack(spacing: 8) {
                             
-                            // Top Row: Vault Status & Toggle
-                            // Top Row: Vault Status & Toggle (The WHOLE ROW is now clickable)
+                            /// Top Row: Vault Status & Toggle
+                            /// Top Row: Vault Status & Toggle (The WHOLE ROW is now clickable)
                             Button(action: {
                                 withAnimation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0)) {
                                     showFullVault.toggle()
@@ -166,14 +166,14 @@ struct ContentView: View {
                                         .font(.system(size: 12, weight: .bold))
                                         .foregroundColor(.white)
                                     
-                                    Spacer() // This empty space is now clickable too!
+                                    Spacer() /// This empty space is now clickable too!
                                     
                                     Image(systemName: showFullVault ? "chevron.up.circle.fill" : "chevron.down.circle.fill")
                                         .foregroundColor(.gray)
                                 }
                                 .padding(.horizontal, 25)
-                                .padding(.vertical, 5) // Adds a little breathing room for the click
-                                .contentShape(Rectangle()) // 🚨 MAGIC: Makes the empty Spacer() catch mouse clicks
+                                .padding(.vertical, 5) /// Adds a little breathing room for the click
+                                .contentShape(Rectangle()) /// 🚨 MAGIC: Makes the empty Spacer() catch mouse clicks
                             }
                             .buttonStyle(.plain)
                             
@@ -182,10 +182,10 @@ struct ContentView: View {
                                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 50))], spacing: 10) {
                                         ForEach(stashedFiles, id: \.self) { url in
                                             
-                                            // Individual Item UI
+                                            /// Individual Item UI
                                             ZStack(alignment: .topTrailing) {
                                                 
-                                                // 🚨 Click to open item
+                                                /// 🚨 Click to open item
                                                 Button(action: { NSWorkspace.shared.open(url) }) {
                                                     VStack {
                                                         Image(systemName: url.isFileURL ? "doc.fill" : "link").font(.system(size: 18)).foregroundColor(.blue)
@@ -199,7 +199,7 @@ struct ContentView: View {
                                                     .cornerRadius(8)
                                                 }
                                                 .buttonStyle(.plain)
-                                                // 🚨 Dynamic Dragging (Files act as Files, Links act as Text)
+                                                /// 🚨 Dynamic Dragging (Files act as Files, Links act as Text)
                                                 .onDrag {
                                                     if url.isFileURL {
                                                         return NSItemProvider(object: url as NSURL)
@@ -208,7 +208,7 @@ struct ContentView: View {
                                                     }
                                                 }
                                                 
-                                                // 🚨 Individual Delete Button (iOS style)
+                                                /// 🚨 Individual Delete Button (iOS style)
                                                 Button(action: {
                                                     withAnimation(.spring()) {
                                                         stashedFiles.removeAll(where: { $0 == url })
@@ -226,7 +226,7 @@ struct ContentView: View {
                                         }
                                     }
                                     .padding(.horizontal, 20)
-                                    .padding(.top, 5) // Prevent X marks from clipping
+                                    .padding(.top, 5) /// Prevent X marks from clipping
                                 }
                                 .frame(height: 120)
                                 .transition(.move(edge: .top).combined(with: .opacity))
@@ -237,7 +237,7 @@ struct ContentView: View {
                 .transition(.opacity)
                 
             } else if isTargeted {
-                // 🚨 STATE 2: Pop-Out Catch (Only shows if notch was closed)
+                /// 🚨 STATE 2: Pop-Out Catch (Only shows if notch was closed)
                 HStack(spacing: 8) {
                     Image(systemName: "arrow.down.doc.fill").foregroundColor(.blue)
                     Text("Drop to Stash").font(.system(size: 13, weight: .bold)).foregroundColor(.white)
@@ -247,7 +247,7 @@ struct ContentView: View {
             }
         }
         .frame(width: 350, height: 400, alignment: .top)
-        // 🚨 HOVER PHYSICS: Dynamically reads the height so no "edge cliffs"
+        /// 🚨 HOVER PHYSICS: Dynamically reads the height so no "edge cliffs"
         .onContinuousHover { phase in
             guard !isTargeted else { return }
             
@@ -283,7 +283,7 @@ struct ContentView: View {
         .edgesIgnoringSafeArea(.all)
     }
     
-    // --- HELPER FUNCTIONS ---
+    /// --- HELPER FUNCTIONS ---
     func runAppleScript(_ script: String) {
         var error: NSDictionary?
         if let appleScript = NSAppleScript(source: script) {
@@ -325,14 +325,14 @@ struct ContentView: View {
                 withAnimation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0)) {
                     self.stashedFiles.append(url)
                     self.isExpanded = true
-                    self.showFullVault = true // Auto-open grid
+                    self.showFullVault = true /// Auto-open grid
                 }
             }
         }
     }
 }
 
-// Custom Shape
+/// Custom Shape
 struct BottomRoundedCornerShape: Shape {
     var radius: CGFloat
     func path(in rect: CGRect) -> Path {

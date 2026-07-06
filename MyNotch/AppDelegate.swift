@@ -7,7 +7,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         
-        // THIS IS THE MAGIC KEY: Hides the Dock icon and makes it a system overlay
+        /// Configures the application as an accessory to hide the Dock icon and behave as a system overlay.
         NSApp.setActivationPolicy(.accessory)
         
         guard let screen = NSScreen.main else { return }
@@ -28,7 +28,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         notchWindow.backgroundColor = .clear
         notchWindow.level = .statusBar
         
-        // ADDED .fullScreenAuxiliary to ensure it stays visible on all desktop spaces
+        /// Configures the window collection behavior to ensure it stays visible on all desktop spaces, including full screen auxiliary spaces.
         notchWindow.collectionBehavior = [.canJoinAllSpaces, .stationary, .ignoresCycle, .fullScreenAuxiliary]
         
         let contentView = NSHostingView(rootView: ContentView())
